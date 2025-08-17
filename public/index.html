@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Task Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    form {
+      display: flex;
+      margin-bottom: 1rem;
+    }
+    input[type="text"] {
+      flex-grow: 1;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px 0 0 4px;
+      outline: none;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: none;
+      background-color: #28a745;
+      color: white;
+      cursor: pointer;
+      border-radius: 0 4px 4px 0;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background-color: white;
+      margin-bottom: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    li.completed {
+      text-decoration: line-through;
+      color: gray;
+    }
+    .task-text {
+      flex-grow: 1;
+    }
+    .complete-btn {
+      margin-left: 1rem;
+      border: none;
+      background: none;
+      color: #28a745;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Task Manager</h1>
+  <form id="taskForm">
+    <input type="text" id="taskInput" placeholder="Enter new task" required />
+    <button type="submit">Add</button>
+  </form>
+  <ul id="taskList"></ul>
+
+  <script>
+    // This example uses local array for demo. Replace with your API calls as needed.
+    let tasks = [];
+
+    const taskForm = document.getElementById('taskForm');
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
+
+    function renderTasks() {
+      taskList.innerHTML = '';
+      tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.className = task.completed ? 'completed' : '';
+        
+        const span = document.createElement('span');
+        span.textContent = task.title;
+        span.className = 'task-text';
+        
+        const button = document.createElement('button');
+        button.textContent = task.completed ? 'Undo' : 'Complete';
+        button.className = 'complete-btn';
+        button.addEventListener('click', () => {
+          tasks[index].completed = !tasks[index].completed;
+          renderTasks();
+        });
+
+        li.appendChild(span);
+        li.appendChild(button);
+        taskList.appendChild(li);
+      });
+    }
+
+    taskForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = taskInput.value.trim();
+      if (title) {
+        tasks.push({ title, completed: false });
+        taskInput.value = '';
+        renderTasks();
+      }
+    });
+
+    // Initial render
+    renderTasks();
+  </script>
+</body>
+</html>
